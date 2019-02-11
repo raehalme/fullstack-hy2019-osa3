@@ -15,7 +15,7 @@ morgan.token('body', function (req, res) {
   if (req.method !== 'POST') {
     return null
   }
-  
+ 
   return JSON.stringify(req.body) 
 })
 
@@ -24,12 +24,13 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(express.static('build'))
 
 app.get('/info', (req, res, next) => {
-  Person.find({}).then(persons => {
-      res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" })
-      res.write("<html><body>" +
+  Person.find({})
+    .then(persons => {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=UTF-8' })
+      res.write('<html><body>' +
         `<p>Puhelinluettelossa ${persons.length} henkilön tiedot</p>` +
         `<p>${new Date()}</p>` +
-        "</body></html>")
+        '</body></html>')
       res.end()
     })
     .catch(error => next(error))
@@ -44,7 +45,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     .then(person => {
       if (person) {
         res.json(person.toJSON())
-      } 
+      }
       else {
         res.status(404).end()
       }
@@ -59,13 +60,13 @@ app.post('/api/persons', (req, res, next) => {
   const newNumber = body.number
 
   if (newName === undefined) {
-    return res.status(400).json({ 
-      error: 'name missing' 
+    return res.status(400).json({
+      error: 'name missing'
     })
   }
   else if (newNumber === undefined) {
-    return res.status(400).json({ 
-      error: 'number missing' 
+    return res.status(400).json({
+      error: 'number missing'
     })
   }
 
@@ -93,7 +94,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
-  persons = Person.findByIdAndRemove(req.params.id)
+  Person.findByIdAndRemove(req.params.id)
     .then(person => res.status(204).end())
     .catch(error => next(error))
 })
