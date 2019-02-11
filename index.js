@@ -52,7 +52,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   const newName = body.name
@@ -109,6 +109,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
+  } 
+  else if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: error.message })
   } 
 
   next(error)
